@@ -9,22 +9,13 @@ sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 sudo swapoff -a
 
 # Install some utils
-sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
 
-# Configure Sysctl 
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
+
+# First load two modules in the current running environment and configure them to load on boot
 
 sudo modprobe overlay
 sudo modprobe br_netfilter
-
-sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
-
-sudo sysctl --system
-
-# >>> Install Containerd Runtime
 
 # Configure persistent loading of modules
 sudo tee /etc/modules-load.d/containerd.conf <<EOF
@@ -32,32 +23,16 @@ overlay
 br_netfilter
 EOF
 
-
-# Load at runtime
-sudo modprobe overlay
-sudo modprobe br_netfilter
-
-# Ensure sysctl params are set
+# Configure required sysctl to persist across system reboots
 sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 EOF
 
-# Reload configs
+# Apply sysctl parameters without reboot to current running enviroment
+
 sudo sysctl --system
-
-sudo modprobe overlay
-sudo modprobe br_netfilter
-
-
-# Install required packages
-sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
-
-
-# Add Docker repo
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 
 # Install containerd
