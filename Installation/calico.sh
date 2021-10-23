@@ -6,7 +6,7 @@ curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/do
 
 sudo mv calicoctl /usr/bin/
 
-chmod +x /usr/bin/calicoctl
+sudo chmod +x /usr/bin/calicoctl
 
 # Install the Tigera Calico operator and custom resource definitions.
 
