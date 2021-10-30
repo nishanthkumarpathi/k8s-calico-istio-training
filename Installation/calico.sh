@@ -12,11 +12,17 @@ sudo chmod +x /usr/bin/calicoctl
 
 kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 
+echo "Wait for 1 Min, Installation is in Progress"
+
 sleep 30
 
 kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 # Confirm that all of the pods are running with the following command.
+
+echo "Wait for 1 Min, Resource Confirguration is being done"
+
+sleep 30
 
 kubectl get pods -n calico-system
 

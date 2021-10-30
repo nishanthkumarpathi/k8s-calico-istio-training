@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Update all installed packages.
+sudo apt update -y
+
+# if you get an error similar to
+# '[ERROR Swap]: running with swap on is not supported. Please disable swap', disable swap:
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo swapoff -a
+
+# Install some utils
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
 # Configure Sysctl 
 
 sudo modprobe overlay
@@ -40,68 +51,40 @@ sudo modprobe overlay
 sudo modprobe br_netfilter
 
 
+# Configure containerd and start service
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+#sudo containerd config default  /etc/containerd/config.toml
+
+# restart containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+
+# >>> Containerd Configuration Done
+
 #Update the apt source list
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] http://apt.kubernetes.io/ kubernetes-xenial main"
-
-# Install all utitilies
 
 # Below Command is used for Latest version of Kubeadm and Kubectl
 # sudo apt -y install vim git curl wget kubelet kubeadm kubectl
 
 # For this Demo, we are Installing 21 Version, because of Calico Cloud Integration
 
-sudo apt install -y kubeadm kubelet kubectl
-
+sudo apt install -y kubeadm=1.21.5-00 kubelet=1.21.5-00 kubectl=1.21.5-00
 sudo apt-mark hold kubelet kubeadm kubectl
 
-# Initialize master node
-lsmod | grep br_netfilter
-sudo systemctl enable kubelet
-
-# Pull container images
-sudo kubeadm config images pull
-
-
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --cri-socket=unix:///run/containerd/containerd.sock
-
-echo "Please Wait for 1 Min and Dont Cancel the Operation. Script will continue executing after 1 min break automatically"
-
-sleep 60
-
-#Create .kube file if it does not exists
-mkdir -p $HOME/.kube
-
-#Move Kubernetes config file if it exists
-if [ -f $HOME/.kube/config ]; then
-    mv $HOME/.kube/config $HOME/.kube/config.back
-fi
-
-sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-sleep 30
 
 # List of Installed Softwares
 echo "**** List of Installed Softwares ****"
 
 kubectl version --client
 
-kubeadm version
-
-
-# Here is the final Cluster Information
-kubectl cluster-info
-
 
 echo "Done."
 
-echo "Installation of Kubernetes Master has completed"
+echo "Installation of Kubernetes Workder has completed"
 echo "*************************************************"
-echo "Dont Close the Terminal, however observe the last few lines of output"
+echo "Dont Close the Terminal"
 
-kubectl get nodes -o wide
-
-kubeadm config print join-defaults
-
-echo "You are supposed to copy the join command and run on the worker nodes."
+echo "You are supposed to copy the join command from master server and run on the worker nodes."

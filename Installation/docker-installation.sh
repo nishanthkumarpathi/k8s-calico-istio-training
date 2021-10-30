@@ -23,6 +23,15 @@ sudo apt-get update -y
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 
+# Configure containerd and start service
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+
+
+# restart containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+
 
 #Enable docker service
 sudo systemctl start docker

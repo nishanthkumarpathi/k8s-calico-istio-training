@@ -51,7 +51,7 @@ sudo add-apt-repository "deb [arch=amd64] http://apt.kubernetes.io/ kubernetes-x
 
 # For this Demo, we are Installing 21 Version, because of Calico Cloud Integration
 
-sudo apt install -y kubeadm kubelet kubectl
+sudo apt install -y kubeadm=1.21.5-00 kubelet=1.21.5-00 kubectl=1.21.5-00
 
 sudo apt-mark hold kubelet kubeadm kubectl
 
@@ -63,7 +63,7 @@ sudo systemctl enable kubelet
 sudo kubeadm config images pull
 
 
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --cri-socket=unix:///run/containerd/containerd.sock
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --cri-socket=unix:///run/containerd/containerd.sock --config kubeadm-config.yaml
 
 echo "Please Wait for 1 Min and Dont Cancel the Operation. Script will continue executing after 1 min break automatically"
 
