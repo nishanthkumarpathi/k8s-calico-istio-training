@@ -105,3 +105,4 @@ kubectl get nodes -o wide
 kubeadm config print join-defaults
 
 echo "You are supposed to copy the join command and run on the worker nodes."
+

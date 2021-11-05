@@ -71,7 +71,7 @@ sudo add-apt-repository "deb [arch=amd64] http://apt.kubernetes.io/ kubernetes-x
 
 # For this Demo, we are Installing 21 Version, because of Calico Cloud Integration
 
-sudo apt install -y kubeadm=1.21.5-00 kubelet=1.21.5-00 kubectl=1.21.5-00
+sudo apt install -y kubeadm kubelet kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 
