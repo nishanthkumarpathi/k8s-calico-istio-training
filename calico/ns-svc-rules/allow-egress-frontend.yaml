@@ -1,0 +1,11 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-egress
+  namespace: advanced-policy-demo
+spec:
+  selector: run == 'frontend'
+  types:
+  - Egress
+  egress:
+  - action: Allow

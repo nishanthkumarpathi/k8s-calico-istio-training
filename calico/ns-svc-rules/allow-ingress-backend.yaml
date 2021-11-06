@@ -1,0 +1,13 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-ingress
+  namespace: advanced-policy-demo
+spec:
+  selector: app == 'backend'
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    source:
+      selector: run == 'frontend'
