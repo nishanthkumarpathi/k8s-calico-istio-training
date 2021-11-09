@@ -1,0 +1,19 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: my-network-policy
+  namespace: production
+spec:
+  order: 900
+  selector: role == "helper"
+  ingress:
+    - action: Deny
+      protocol: TCP
+      source:
+        serviceAccounts:
+          - names: 
+              - sre-account
+    - action: LOG
+      protocol: ICMP
+      source:
+        namespaceSelector: color = "green"

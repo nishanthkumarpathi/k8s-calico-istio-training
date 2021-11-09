@@ -1,0 +1,17 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+Metadata:
+  name: my-network-policy
+  namespace: production
+Spec:
+  podSelector:
+    matchLabels:
+      role: db
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: 6379
