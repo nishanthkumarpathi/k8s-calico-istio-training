@@ -15,4 +15,4 @@ spec:
       selector: app == 'summary'
   - action: Deny
     source:
-      selector: app == 'Deny'
+      selector: app == 'customer'
